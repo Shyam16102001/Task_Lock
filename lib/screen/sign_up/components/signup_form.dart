@@ -37,6 +37,12 @@ class _SignUpFormState extends State<SignUpForm> {
     }
   }
 
+  OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(28),
+    borderSide: const BorderSide(color: Colors.black54),
+    gapPadding: 10,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -103,10 +109,17 @@ class _SignUpFormState extends State<SignUpForm> {
         }
         return null;
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        enabledBorder: outlineInputBorder,
+        focusedBorder: outlineInputBorder,
+        border: outlineInputBorder,
+        hintStyle: const TextStyle(color: kPrimaryLightColor, fontSize: 18),
+        labelStyle: const TextStyle(color: kTextColor, fontSize: 24),
         hintText: "Confirm Password",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.lock,
           color: kPrimaryColor,
         ),
@@ -137,10 +150,17 @@ class _SignUpFormState extends State<SignUpForm> {
         }
         return null;
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        enabledBorder: outlineInputBorder,
+        focusedBorder: outlineInputBorder,
+        border: outlineInputBorder,
+        hintStyle: const TextStyle(color: kPrimaryLightColor, fontSize: 18),
+        labelStyle: const TextStyle(color: kTextColor, fontSize: 24),
         hintText: "Password",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.lock,
           color: kPrimaryColor,
         ),
@@ -183,10 +203,17 @@ class _SignUpFormState extends State<SignUpForm> {
         }
         return null;
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        enabledBorder: outlineInputBorder,
+        focusedBorder: outlineInputBorder,
+        border: outlineInputBorder,
+        hintStyle: const TextStyle(color: kPrimaryLightColor, fontSize: 18),
+        labelStyle: const TextStyle(color: kTextColor, fontSize: 24),
         hintText: "Email ID",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.mail,
           color: kPrimaryColor,
         ),
@@ -216,10 +243,17 @@ class _SignUpFormState extends State<SignUpForm> {
         }
         return null;
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        enabledBorder: outlineInputBorder,
+        focusedBorder: outlineInputBorder,
+        border: outlineInputBorder,
+        hintStyle: const TextStyle(color: kPrimaryLightColor, fontSize: 18),
+        labelStyle: const TextStyle(color: kTextColor, fontSize: 24),
         hintText: "Name",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.person,
           color: kPrimaryColor,
         ),

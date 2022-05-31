@@ -35,6 +35,11 @@ class _SignInFormState extends State<SignInForm> {
     }
   }
 
+  OutlineInputBorder outlineInputBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(28),
+    borderSide: const BorderSide(color: Colors.black54),
+    gapPadding: 10,
+  );
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -54,6 +59,9 @@ class _SignInFormState extends State<SignInForm> {
                 removeError(error: kSignInError);
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Logging you in")),
+                  );
                   logIn(email, password).then((user) => {
                         if (user != null)
                           {
@@ -64,7 +72,11 @@ class _SignInFormState extends State<SignInForm> {
                         else
                           {
                             errors = [],
-                            addError(error: kSignInError),
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      "Something went wrong. Please try again.")),
+                            )
                           }
                       });
                 }
@@ -97,10 +109,17 @@ class _SignInFormState extends State<SignInForm> {
         }
         return null;
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        enabledBorder: outlineInputBorder,
+        focusedBorder: outlineInputBorder,
+        border: outlineInputBorder,
+        hintStyle: const TextStyle(color: kPrimaryLightColor, fontSize: 18),
+        labelStyle: const TextStyle(color: kTextColor, fontSize: 24),
         hintText: "Password",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.lock,
           color: kPrimaryColor,
         ),
@@ -143,10 +162,17 @@ class _SignInFormState extends State<SignInForm> {
         }
         return null;
       },
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+        enabledBorder: outlineInputBorder,
+        focusedBorder: outlineInputBorder,
+        border: outlineInputBorder,
+        hintStyle: const TextStyle(color: kPrimaryLightColor, fontSize: 18),
+        labelStyle: const TextStyle(color: kTextColor, fontSize: 24),
         hintText: "Email",
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.mail,
           color: kTextColor,
         ),

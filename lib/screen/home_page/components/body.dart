@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
 import 'package:task_lock/data_service/auth/log_out.dart';
 import 'package:task_lock/screen/add_task/add_task_screen.dart';
@@ -52,7 +53,8 @@ class _BodyState extends State<Body> {
         onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
             AddTaskScreen.routeName, ModalRoute.withName(HomePage.routeName)),
         tooltip: 'It helps to add a new Task',
-        child: const Icon(Icons.add),
+        backgroundColor: kSecondaryColor,
+        child: const Icon(Icons.add, color: kBackgroundColor),
       ), //
     );
   }

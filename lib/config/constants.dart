@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-const kPrimaryColor = Color(0xFFE6E1E4);
+const kPrimaryColor = Color(0xFF2E3A59);
 const kPrimaryLightColor = Color(0xFF958E95);
-const kSecondaryColor = Color(0xFF35B5AD);
-const kTextColor = Color(0xFFE6E1E4);
-const kBackgroundColor = Color(0xFF2C2B3F);
+const kSecondaryColor = Color(0xFF7832FF);
+const kTextColor = Color(0xFF2E3A59);
+const kBackgroundColor = Color(0xFFE5E5E5);
 const kAnimationDuration = Duration(milliseconds: 200);
 
 // final headingStyle = TextStyle(
@@ -14,8 +14,6 @@ const kAnimationDuration = Duration(milliseconds: 200);
 //   fontFamily: "Lato",
 // );
 
-const String appName = "Peca";
-const String quote = "A Digital Pet Care System";
 final RegExp emailValidatorRegExp =
     RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 const String kNameNullError = "Please enter your name";
