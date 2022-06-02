@@ -82,8 +82,10 @@ class _BodyState extends State<Body> {
                         "StartTime": startTime.format(context).toString(),
                         "EndTime": endTime.format(context).toString(),
                         "Description": description,
-                        "Rewards": self ? 5 : coins,
-                        "AssignedBy": self ? "MySelf" : mail
+                        "Rewards": self ? 5.0 : coins,
+                        "AssignedBy": self
+                            ? "MySelf"
+                            : FirebaseAuth.instance.currentUser!.email
                       }).then((value) => Navigator.pop(context));
                     }
                   })

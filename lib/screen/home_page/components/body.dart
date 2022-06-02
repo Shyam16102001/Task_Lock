@@ -98,7 +98,7 @@ class _BodyState extends State<Body> {
 }
 
 Widget buildList(BuildContext context, String name, String endDate,
-    String endTime, int rewards, String assigned, int index) {
+    String endTime, double rewards, String assigned, int index) {
   return InkWell(
     // onTap: () {
     //   Navigator.push(
@@ -129,7 +129,7 @@ Widget buildList(BuildContext context, String name, String endDate,
                 name,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              Text("Rewards: $rewards"),
+              Text("Rewards: ${rewards.toInt()}"),
             ],
           ),
           SizedBox(height: getProportionateScreenHeight(3)),
