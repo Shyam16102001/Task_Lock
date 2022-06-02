@@ -72,6 +72,7 @@ class _SignInFormState extends State<SignInForm> {
                         else
                           {
                             errors = [],
+                            addError(error: kSignInError),
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text(

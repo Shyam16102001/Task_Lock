@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task_lock/components/continue_button.dart';
 import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
 import 'package:intl/intl.dart';
+import 'package:task_lock/data_service/get_event_list.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -21,7 +24,7 @@ class _BodyState extends State<Body> {
   String description = "";
   double coins = 5;
   String? mail;
-  bool self = false;
+  bool self = true;
   List<String> errors = [];
 
   void addError({String? error}) {
@@ -64,7 +67,25 @@ class _BodyState extends State<Body> {
               ContinueButton(
                   text: "Create Task",
                   press: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      FirebaseFirestore.instance
+                          .collection("Tasks")
+                          .doc(mail ?? FirebaseAuth.instance.currentUser!.email)
+                          .collection("Events")
+                          .doc()
+                          .set({
+                        "Name": name.toString(),
+                        "StartDate":
+                            DateFormat.yMMMd().format(startDate).toString(),
+                        "EndDate":
+                            DateFormat.yMMMd().format(endDate).toString(),
+                        "StartTime": startTime.format(context).toString(),
+                        "EndTime": endTime.format(context).toString(),
+                        "Description": description,
+                        "Rewards": self ? 5 : coins,
+                        "AssignedBy": self ? "MySelf" : mail
+                      }).then((value) => Navigator.pop(context));
+                    }
                   })
             ],
           ),
@@ -112,9 +133,9 @@ class _BodyState extends State<Body> {
         ),
         Slider(
           value: coins,
-          onChanged: (_newValue) {
+          onChanged: (newValue) {
             setState(() {
-              coins = _newValue;
+              coins = newValue;
             });
           },
           divisions: 10,
@@ -139,11 +160,11 @@ class _BodyState extends State<Body> {
             ),
             GestureDetector(
               onTap: () async {
-                TimeOfDay? _newTime = await showTimePicker(
+                TimeOfDay? newTime = await showTimePicker(
                     context: context, initialTime: startTime);
-                if (_newTime != null) {
+                if (newTime != null) {
                   setState(() {
-                    startTime = _newTime;
+                    startTime = newTime;
                   });
                 }
               },
@@ -163,11 +184,11 @@ class _BodyState extends State<Body> {
             ),
             GestureDetector(
               onTap: () async {
-                TimeOfDay? _newTime = await showTimePicker(
+                TimeOfDay? newTime = await showTimePicker(
                     context: context, initialTime: startTime);
-                if (_newTime != null) {
+                if (newTime != null) {
                   setState(() {
-                    endTime = _newTime;
+                    endTime = newTime;
                   });
                 }
               },
@@ -195,14 +216,14 @@ class _BodyState extends State<Body> {
             ),
             GestureDetector(
               onTap: () async {
-                DateTime? _newDate = await showDatePicker(
+                DateTime? newDate = await showDatePicker(
                     context: context,
                     initialDate: startDate,
                     firstDate: DateTime.now(),
                     lastDate: DateTime(2300));
-                if (_newDate != null) {
+                if (newDate != null) {
                   setState(() {
-                    startDate = _newDate;
+                    startDate = newDate;
                   });
                 }
               },
@@ -222,14 +243,14 @@ class _BodyState extends State<Body> {
             ),
             GestureDetector(
               onTap: () async {
-                DateTime? _newDate = await showDatePicker(
+                DateTime? newDate = await showDatePicker(
                     context: context,
                     initialDate: startDate,
                     firstDate: startDate,
                     lastDate: DateTime(2300));
-                if (_newDate != null) {
+                if (newDate != null) {
                   setState(() {
-                    endDate = _newDate;
+                    endDate = newDate;
                   });
                 }
               },
@@ -261,7 +282,7 @@ class _BodyState extends State<Body> {
       },
       style: const TextStyle(color: kTextColor, fontSize: 24),
       decoration: InputDecoration(
-        labelText: "Email ID of the participant",
+        labelText: "Participant Email ID",
         labelStyle: Theme.of(context).textTheme.titleLarge,
       ),
     );

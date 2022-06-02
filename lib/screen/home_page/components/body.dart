@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
-import 'package:task_lock/data_service/auth/log_out.dart';
-import 'package:task_lock/screen/add_task/add_task_screen.dart';
-import 'package:task_lock/screen/home_page/home_page.dart';
-import 'package:task_lock/screen/sign_in/sign_in_screen.dart';
+import 'package:task_lock/data_service/get_event_list.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -17,77 +15,145 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late User user;
+  List userTaskList = [];
+
   @override
   void initState() {
     user = _auth.currentUser!;
+    user.reload();
+    if (user.displayName == null) {
+      user.reload();
+    }
+    fetchDatabaseList();
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: (() {}), icon: const Icon(Icons.menu)),
-        title: Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-                onPressed: (() => logOut().then((value) => {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          SignInScreen.routeName,
-                          (Route<dynamic> route) => false),
-                    })),
-                icon: const Icon(Icons.account_circle))),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: getProportionateScreenWidth(20),
-            vertical: getProportionateScreenHeight(10)),
-        child: Column(
-          children: [
-            WelcomeMessage(user: user),
-            Row(),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-            AddTaskScreen.routeName, ModalRoute.withName(HomePage.routeName)),
-        tooltip: 'It helps to add a new Task',
-        backgroundColor: kSecondaryColor,
-        child: const Icon(Icons.add, color: kBackgroundColor),
-      ), //
-    );
+  fetchDatabaseList() async {
+    dynamic result = await DataBaseManager().getEventsList();
+    if (result == null) {
+    } else {
+      setState(() {
+        userTaskList = result;
+      });
+    }
   }
-}
-
-class WelcomeMessage extends StatelessWidget {
-  const WelcomeMessage({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
-
-  final User user;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    fetchDatabaseList();
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Hello ${user.displayName} !",
-                style: Theme.of(context).textTheme.headlineMedium,
-              )),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Have a nice day.",
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          )
+          welcomeMessage(context, user),
+          SizedBox(height: getProportionateScreenHeight(15)),
+          Text(
+            "Your pending Tasks:",
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .merge(const TextStyle(color: kTextColor)),
+          ),
+          SizedBox(height: getProportionateScreenHeight(10)),
+          userTaskList.isEmpty
+              ? Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: getProportionateScreenWidth(20)),
+                  child: SvgPicture.asset(
+                    "assets/images/not_found.svg",
+                    height: getProportionateScreenHeight(500),
+                  ),
+                )
+              : SizedBox(
+                  height: 500,
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      setState(() {
+                        fetchDatabaseList();
+                      });
+                    },
+                    child: Scrollbar(
+                      child: ListView.builder(
+                        itemCount: userTaskList.length,
+                        itemBuilder: (context, index) {
+                          final name = userTaskList[index]['Name'];
+                          final endDate = userTaskList[index]['EndDate'];
+                          final endTime = userTaskList[index]['EndTime'];
+                          final rewards = userTaskList[index]['Rewards'];
+                          final assigned = userTaskList[index]['AssignedBy'];
+
+                          return buildList(context, name, endDate, endTime,
+                              rewards, assigned, index);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
         ],
       ),
     );
   }
+}
+
+Widget buildList(BuildContext context, String name, String endDate,
+    String endTime, int rewards, String assigned, int index) {
+  return InkWell(
+    // onTap: () {
+    //   Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //           builder: (context) => PetsDetailScreen(
+    //                 name: name,
+    //                 age: age,
+    //                 urlImage: urlImage,
+    //                 gender: userPetList[index]['Gender'],
+    //                 type: userPetList[index]['Pet Type'],
+    //               )));
+    // },
+    child: Container(
+      margin: EdgeInsets.all(getProportionateScreenWidth(10)),
+      padding: EdgeInsets.all(getProportionateScreenWidth(8)),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 3)]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                name,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              Text("Rewards: $rewards"),
+            ],
+          ),
+          SizedBox(height: getProportionateScreenHeight(3)),
+          Text("$endDate - $endTime"),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget welcomeMessage(BuildContext context, User user) {
+  return SafeArea(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Hello ${user.displayName ?? "User001"} !",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        Text(
+          "Have a nice day.",
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+      ],
+    ),
+  );
 }
