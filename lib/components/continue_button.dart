@@ -6,11 +6,13 @@ class ContinueButton extends StatelessWidget {
   final String text;
   final VoidCallback press;
   IconData? icon;
+  Color? color;
   ContinueButton({
     Key? key,
     required this.text,
     required this.press,
     this.icon,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -23,7 +25,7 @@ class ContinueButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
-            primary: kSecondaryColor,
+            primary: color ?? kSecondaryColor,
             elevation: 10),
         onPressed: press,
         child: icon == null
@@ -32,7 +34,7 @@ class ContinueButton extends StatelessWidget {
                     fontFamily: "Robato",
                     fontSize: getProportionateScreenWidth(24),
                     color: kBackgroundColor))
-            : Row(children: [
+            : Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 Icon(icon),
                 Text(text,
                     style: TextStyle(

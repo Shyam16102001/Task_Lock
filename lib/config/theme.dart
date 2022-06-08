@@ -15,6 +15,7 @@ ThemeData theme() {
 
 TextTheme textTheme() {
   return const TextTheme(
+      displaySmall: TextStyle(color: kBackgroundColor, fontFamily: "Poppins"),
       headlineLarge: TextStyle(color: kTextColor, fontFamily: "Poppins"),
       headlineMedium: TextStyle(color: kTextColor, fontFamily: "Poppins"),
       titleLarge: TextStyle(color: kPrimaryLightColor, fontFamily: "Poppins"),

@@ -70,7 +70,9 @@ class _BodyState extends State<Body> {
                     if (_formKey.currentState!.validate()) {
                       FirebaseFirestore.instance
                           .collection("Tasks")
-                          .doc(mail ?? FirebaseAuth.instance.currentUser!.email)
+                          .doc(self
+                              ? FirebaseAuth.instance.currentUser!.email
+                              : mail)
                           .collection("Events")
                           .doc()
                           .set({
@@ -84,8 +86,9 @@ class _BodyState extends State<Body> {
                         "Description": description,
                         "Rewards": self ? 5.0 : coins,
                         "AssignedBy": self
-                            ? "MySelf"
-                            : FirebaseAuth.instance.currentUser!.email
+                            ? "Yourself"
+                            : FirebaseAuth.instance.currentUser!.email,
+                        "Completed": false
                       }).then((value) => Navigator.pop(context));
                     }
                   })

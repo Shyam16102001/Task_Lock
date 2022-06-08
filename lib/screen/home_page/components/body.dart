@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
 import 'package:task_lock/data_service/get_event_list.dart';
+import 'package:task_lock/screen/task_detail/task_detail_screen.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    fetchDatabaseList();
+    // fetchDatabaseList();
     return Padding(
       padding:
           EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
@@ -58,14 +59,7 @@ class _BodyState extends State<Body> {
           ),
           SizedBox(height: getProportionateScreenHeight(10)),
           userTaskList.isEmpty
-              ? Container(
-                  margin: EdgeInsets.symmetric(
-                      horizontal: getProportionateScreenWidth(20)),
-                  child: SvgPicture.asset(
-                    "assets/images/not_found.svg",
-                    height: getProportionateScreenHeight(500),
-                  ),
-                )
+              ? noTaskFound()
               : SizedBox(
                   height: 500,
                   child: RefreshIndicator(
@@ -78,14 +72,29 @@ class _BodyState extends State<Body> {
                       child: ListView.builder(
                         itemCount: userTaskList.length,
                         itemBuilder: (context, index) {
+                          final completed = userTaskList[index]['Completed'];
                           final name = userTaskList[index]['Name'];
+                          final startDate = userTaskList[index]['StartDate'];
+                          final startTime = userTaskList[index]['StartTime'];
                           final endDate = userTaskList[index]['EndDate'];
                           final endTime = userTaskList[index]['EndTime'];
                           final rewards = userTaskList[index]['Rewards'];
                           final assigned = userTaskList[index]['AssignedBy'];
+                          final description =
+                              userTaskList[index]['Description'];
 
-                          return buildList(context, name, endDate, endTime,
-                              rewards, assigned, index);
+                          return buildList(
+                              context,
+                              completed,
+                              name,
+                              startDate,
+                              startTime,
+                              endDate,
+                              endTime,
+                              rewards,
+                              assigned,
+                              description,
+                              index);
                         },
                       ),
                     ),
@@ -95,49 +104,77 @@ class _BodyState extends State<Body> {
       ),
     );
   }
+
+  Widget noTaskFound() {
+    fetchDatabaseList();
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+      child: SvgPicture.asset(
+        "assets/images/not_found.svg",
+        height: getProportionateScreenHeight(500),
+      ),
+    );
+  }
 }
 
-Widget buildList(BuildContext context, String name, String endDate,
-    String endTime, double rewards, String assigned, int index) {
-  return InkWell(
-    // onTap: () {
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => PetsDetailScreen(
-    //                 name: name,
-    //                 age: age,
-    //                 urlImage: urlImage,
-    //                 gender: userPetList[index]['Gender'],
-    //                 type: userPetList[index]['Pet Type'],
-    //               )));
-    // },
-    child: Container(
-      margin: EdgeInsets.all(getProportionateScreenWidth(10)),
-      padding: EdgeInsets.all(getProportionateScreenWidth(8)),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 3)]),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                name,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              Text("Rewards: ${rewards.toInt()}"),
-            ],
+Widget buildList(
+    BuildContext context,
+    bool completed,
+    String name,
+    String startDate,
+    String startTime,
+    String endDate,
+    String endTime,
+    double rewards,
+    String assigned,
+    String? description,
+    int index) {
+  return completed
+      ? Container()
+      : InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TaskDetailScreen(
+                          name: name,
+                          assigned: assigned,
+                          endDate: endDate,
+                          endTime: endTime,
+                          rewards: rewards.toInt(),
+                          startDate: startDate,
+                          startTime: startTime,
+                          description: description,
+                        )));
+          },
+          child: Container(
+            margin: EdgeInsets.all(getProportionateScreenWidth(10)),
+            padding: EdgeInsets.all(getProportionateScreenWidth(8)),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(color: Colors.black45, blurRadius: 3)
+                ]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      name,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    Text("Rewards: ${rewards.toInt()}"),
+                  ],
+                ),
+                SizedBox(height: getProportionateScreenHeight(3)),
+                Text("$endDate - $endTime"),
+              ],
+            ),
           ),
-          SizedBox(height: getProportionateScreenHeight(3)),
-          Text("$endDate - $endTime"),
-        ],
-      ),
-    ),
-  );
+        );
 }
 
 Widget welcomeMessage(BuildContext context, User user) {

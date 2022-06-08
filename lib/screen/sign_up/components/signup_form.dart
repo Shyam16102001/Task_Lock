@@ -71,13 +71,6 @@ class _SignUpFormState extends State<SignUpForm> {
                           {
                             user.updateDisplayName(name),
                             user.reload(),
-                            FirebaseFirestore.instance
-                                .collection('UserData')
-                                .doc(user.email)
-                                .set({
-                              "ID": user.uid.toString(),
-                              "email": user.email.toString(),
-                            }),
                             Navigator.popAndPushNamed(
                                 context, HomePage.routeName),
                           }
