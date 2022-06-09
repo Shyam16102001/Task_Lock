@@ -5,7 +5,6 @@ import 'package:task_lock/components/continue_button.dart';
 import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
 import 'package:intl/intl.dart';
-import 'package:task_lock/data_service/get_event_list.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -76,6 +75,7 @@ class _BodyState extends State<Body> {
                           .collection("Events")
                           .doc()
                           .set({
+                        "ID": "",
                         "Name": name.toString(),
                         "StartDate":
                             DateFormat.yMMMd().format(startDate).toString(),
@@ -89,7 +89,7 @@ class _BodyState extends State<Body> {
                             ? "Yourself"
                             : FirebaseAuth.instance.currentUser!.email,
                         "Completed": false
-                      }).then((value) => Navigator.pop(context));
+                      }).then((_) => Navigator.pop(context));
                     }
                   })
             ],

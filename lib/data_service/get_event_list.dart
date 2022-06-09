@@ -11,13 +11,22 @@ class DataBaseManager {
           .collection("Events")
           .get()
           .then((querySnapshot) {
-        querySnapshot.docs.forEach((element) {
-          itemsList.add(element.data());
-        });
+        for (var i = 0; i < querySnapshot.docs.length; i++) {
+          itemsList.add(querySnapshot.docs[i].data());
+          itemsList[i]['ID'] = querySnapshot.docs[i].id;
+        }
       });
       return itemsList;
     } catch (e) {
       return null;
     }
+  }
+
+  Future<int> getCoins() async {
+    DocumentSnapshot variable = await FirebaseFirestore.instance
+        .collection('Tasks')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get();
+    return variable["Coins"];
   }
 }

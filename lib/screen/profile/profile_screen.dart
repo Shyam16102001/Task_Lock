@@ -7,14 +7,19 @@ import 'package:task_lock/config/size_config.dart';
 import 'package:task_lock/data_service/auth/log_out.dart';
 import 'package:task_lock/screen/sign_in/sign_in_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
   static String routeName = "/profile";
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
   Widget build(BuildContext context) {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    User user = _auth.currentUser!;
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    User user = auth.currentUser!;
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -42,7 +47,8 @@ class ProfileScreen extends StatelessWidget {
             buildInfo("Email ID :", user.email ?? "Mail ID"),
             SizedBox(height: SizeConfig.screenHeight * 0.02),
             buildInfo("Password :", "**********"),
-            SizedBox(height: SizeConfig.screenHeight * 0.04),
+            SizedBox(height: SizeConfig.screenHeight * 0.02),
+            SizedBox(height: SizeConfig.screenHeight * 0.02),
             ContinueButton(
               text: "Log Out",
               press: () => logOut().then((value) => {

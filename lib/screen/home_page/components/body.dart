@@ -30,6 +30,7 @@ class _BodyState extends State<Body> {
   }
 
   fetchDatabaseList() async {
+    print("x");
     dynamic result = await DataBaseManager().getEventsList();
     if (result == null) {
     } else {
@@ -82,6 +83,7 @@ class _BodyState extends State<Body> {
                           final assigned = userTaskList[index]['AssignedBy'];
                           final description =
                               userTaskList[index]['Description'];
+                          final id = userTaskList[index]['ID'];
 
                           return buildList(
                               context,
@@ -94,6 +96,7 @@ class _BodyState extends State<Body> {
                               rewards,
                               assigned,
                               description,
+                              id,
                               index);
                         },
                       ),
@@ -106,7 +109,7 @@ class _BodyState extends State<Body> {
   }
 
   Widget noTaskFound() {
-    fetchDatabaseList();
+    // fetchDatabaseList();
     return Container(
       margin: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
       child: SvgPicture.asset(
@@ -120,14 +123,15 @@ class _BodyState extends State<Body> {
 Widget buildList(
     BuildContext context,
     bool completed,
-    String name,
-    String startDate,
-    String startTime,
-    String endDate,
-    String endTime,
-    double rewards,
-    String assigned,
+    String? name,
+    String? startDate,
+    String? startTime,
+    String? endDate,
+    String? endTime,
+    double? rewards,
+    String? assigned,
     String? description,
+    String? id,
     int index) {
   return completed
       ? Container()
@@ -137,14 +141,15 @@ Widget buildList(
                 context,
                 MaterialPageRoute(
                     builder: (context) => TaskDetailScreen(
-                          name: name,
-                          assigned: assigned,
-                          endDate: endDate,
-                          endTime: endTime,
-                          rewards: rewards.toInt(),
-                          startDate: startDate,
-                          startTime: startTime,
+                          name: name!,
+                          assigned: assigned!,
+                          endDate: endDate!,
+                          endTime: endTime!,
+                          rewards: rewards!.toInt(),
+                          startDate: startDate!,
+                          startTime: startTime!,
                           description: description,
+                          id: id!,
                         )));
           },
           child: Container(
@@ -163,10 +168,10 @@ Widget buildList(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      name,
+                      name!,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    Text("Rewards: ${rewards.toInt()}"),
+                    Text("Rewards: ${rewards!.toInt()}"),
                   ],
                 ),
                 SizedBox(height: getProportionateScreenHeight(3)),

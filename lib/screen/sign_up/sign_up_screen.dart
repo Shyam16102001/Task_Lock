@@ -11,7 +11,7 @@ class SignUpScreen extends StatelessWidget {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(),
-      body: Body(),
+      body: const Body(),
     );
   }
 }

@@ -1,11 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:task_lock/components/continue_button.dart';
 import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
-import 'package:task_lock/screen/task_detail/components/build_info.dart';
+import 'package:task_lock/data_service/get_event_list.dart';
+import 'package:task_lock/screen/home_page/home_page.dart';
 
 class TaskDetailScreen extends StatelessWidget {
   TaskDetailScreen({
@@ -18,6 +20,7 @@ class TaskDetailScreen extends StatelessWidget {
     this.description,
     required this.rewards,
     required this.assigned,
+    required this.id,
   }) : super(key: key);
   static String routeName = "/task_detail";
 
@@ -29,9 +32,11 @@ class TaskDetailScreen extends StatelessWidget {
   String? description;
   int rewards;
   String assigned;
+  String id;
 
   @override
   Widget build(BuildContext context) {
+    int coins = 0;
     DateTime temp = DateFormat("MMM d, y h:mm a").parse("$endDate $endTime");
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +65,7 @@ class TaskDetailScreen extends StatelessWidget {
               buildInfo(context, "Started from:", "$startDate, $startTime"),
               buildInfo(context, "Ending at:", "$endDate, $endTime"),
               buildInfo(context, "Remaining:", Jiffy(temp).fromNow()),
-              buildInfo(context, "Rewards:", rewards.toString()),
+              buildInfo(context, "Rewards:", "$rewards"),
               buildInfo(context, "Assigned by", assigned),
               if (description != null)
                 (Text(
@@ -93,10 +98,26 @@ class TaskDetailScreen extends StatelessWidget {
                             showDialog(
                                 context: context,
                                 builder: (_) => alertDialog(
-                                    context,
-                                    "Remove this Task?",
-                                    "This task will be removed from your profile.",
-                                    () {}));
+                                        context,
+                                        "Remove this Task?",
+                                        "This task will be removed from your profile.",
+                                        () {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text("Updating...")));
+                                      Navigator.pop(context);
+                                      FirebaseFirestore.instance
+                                          .collection("Tasks")
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.email)
+                                          .collection("Events")
+                                          .doc(id)
+                                          .delete()
+                                          .then((value) => Navigator.popUntil(
+                                              context,
+                                              ModalRoute.withName(
+                                                  HomePage.routeName)));
+                                    }));
                           })),
                   SizedBox(
                       width: 180,
@@ -108,10 +129,34 @@ class TaskDetailScreen extends StatelessWidget {
                             showDialog(
                                 context: context,
                                 builder: (_) => alertDialog(
-                                    context,
-                                    "Mark as complete?",
-                                    "Do you want this task to be mark as complete?.",
-                                    () {}));
+                                        context,
+                                        "Mark as complete?",
+                                        "Do you want this task to be mark as complete?",
+                                        () async {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text("Updating...")));
+                                      Navigator.pop(context);
+                                      coins =
+                                          await DataBaseManager().getCoins();
+                                      FirebaseFirestore.instance
+                                          .collection("Tasks")
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.email)
+                                          .collection("Events")
+                                          .doc(id)
+                                          .update({"Completed": true});
+
+                                      FirebaseFirestore.instance
+                                          .collection('Tasks')
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.email)
+                                          .set({"Coins": coins + rewards}).then(
+                                              (value) => Navigator.popUntil(
+                                                  context,
+                                                  ModalRoute.withName(
+                                                      HomePage.routeName)));
+                                    }));
                           })),
                 ],
               ),
@@ -135,9 +180,9 @@ class TaskDetailScreen extends StatelessWidget {
       title: Text(title),
       content: Text(content),
       actions: [
-        ElevatedButton(onPressed: press, child: Text("Yes")),
+        ElevatedButton(onPressed: press, child: const Text("Yes")),
         ElevatedButton(
-            onPressed: () => Navigator.pop(context), child: Text("No")),
+            onPressed: () => Navigator.pop(context), child: const Text("No")),
       ],
     );
   }
