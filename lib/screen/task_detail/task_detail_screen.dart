@@ -137,8 +137,10 @@ class TaskDetailScreen extends StatelessWidget {
                                           .showSnackBar(const SnackBar(
                                               content: Text("Updating...")));
                                       Navigator.pop(context);
-                                      coins =
-                                          await DataBaseManager().getCoins();
+                                      coins = await DataBaseManager().getCoins(
+                                          FirebaseAuth
+                                              .instance.currentUser!.email);
+
                                       FirebaseFirestore.instance
                                           .collection("Tasks")
                                           .doc(FirebaseAuth
@@ -146,6 +148,15 @@ class TaskDetailScreen extends StatelessWidget {
                                           .collection("Events")
                                           .doc(id)
                                           .update({"Completed": true});
+
+                                      if (assigned != "Yourself") {
+                                        int coin = await DataBaseManager()
+                                            .getCoins(assigned);
+                                        FirebaseFirestore.instance
+                                            .collection('Tasks')
+                                            .doc(assigned)
+                                            .set({"Coins": coin - rewards});
+                                      }
 
                                       FirebaseFirestore.instance
                                           .collection('Tasks')
@@ -187,6 +198,15 @@ class TaskDetailScreen extends StatelessWidget {
     );
   }
 
+  String shortner(String text) {
+    if (text.length > 20) {
+      text = text.substring(0, 15);
+      return ("$text.....");
+    } else {
+      return text;
+    }
+  }
+
   Widget buildInfo(BuildContext context, String title, String value) => Column(
         children: [
           Row(
@@ -198,7 +218,7 @@ class TaskDetailScreen extends StatelessWidget {
               ),
               SizedBox(width: SizeConfig.screenWidth * 0.05),
               Text(
-                value,
+                shortner(value),
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge!

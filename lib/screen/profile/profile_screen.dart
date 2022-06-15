@@ -5,6 +5,8 @@ import 'package:task_lock/components/continue_button.dart';
 import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
 import 'package:task_lock/data_service/auth/log_out.dart';
+import 'package:task_lock/data_service/get_event_list.dart';
+import 'package:task_lock/screen/rewards/rewards_screen.dart';
 import 'package:task_lock/screen/sign_in/sign_in_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -16,6 +18,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  int coins = 0;
+  @override
+  void initState() {
+    fetchcoins();
+    super.initState();
+  }
+
+  fetchcoins() {
+    DataBaseManager()
+        .getCoins(FirebaseAuth.instance.currentUser!.email)
+        .then((value) {
+      setState(() {
+        coins = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -46,8 +65,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: SizeConfig.screenHeight * 0.02),
             buildInfo("Email ID :", user.email ?? "Mail ID"),
             SizedBox(height: SizeConfig.screenHeight * 0.02),
-            buildInfo("Password :", "**********"),
+            buildInfo("Coins :", coins.toString()),
             SizedBox(height: SizeConfig.screenHeight * 0.02),
+            ContinueButton(
+                color: Colors.orange,
+                text: "Rewards Section",
+                press: () =>
+                    Navigator.pushNamed(context, RewardsScreen.routeName)),
             SizedBox(height: SizeConfig.screenHeight * 0.02),
             ContinueButton(
               text: "Log Out",

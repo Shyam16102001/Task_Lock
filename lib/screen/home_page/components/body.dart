@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,6 +19,7 @@ class _BodyState extends State<Body> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late User user;
   List userTaskList = [];
+  late Timer timer;
 
   @override
   void initState() {
@@ -26,7 +29,16 @@ class _BodyState extends State<Body> {
       user.reload();
     }
     fetchDatabaseList();
+    // timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    //   fetchDatabaseList();
+    // });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   fetchDatabaseList() async {
@@ -109,7 +121,7 @@ class _BodyState extends State<Body> {
   }
 
   Widget noTaskFound() {
-    // fetchDatabaseList();
+    fetchDatabaseList();
     return Container(
       margin: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
       child: SvgPicture.asset(

@@ -22,11 +22,9 @@ class DataBaseManager {
     }
   }
 
-  Future<int> getCoins() async {
-    DocumentSnapshot variable = await FirebaseFirestore.instance
-        .collection('Tasks')
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .get();
+  Future<int> getCoins(user) async {
+    DocumentSnapshot variable =
+        await FirebaseFirestore.instance.collection('Tasks').doc(user).get();
     return variable["Coins"];
   }
 }
