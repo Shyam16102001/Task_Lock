@@ -1,6 +1,6 @@
 **Privacy Policy**
 
-built the TaskLock app as a Free app. This SERVICE is provided by at no cost and is intended for use as is.
+TaskLock app as a Free app and its source code is available on Github. This SERVICE is provided by me at no cost and is intended for use as is.
 
 This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.
 
