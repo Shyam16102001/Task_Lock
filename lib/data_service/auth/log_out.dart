@@ -5,5 +5,6 @@ Future logOut() async {
 
   try {
     await auth.signOut();
+    // ignore: empty_catches
   } catch (e) {}
 }

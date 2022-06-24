@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_returning_null_for_void
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:task_lock/components/continue_button.dart';
@@ -11,10 +13,10 @@ class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);
 
   @override
-  _SignUpFormState createState() => _SignUpFormState();
+  SignUpFormState createState() => SignUpFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
   late String name;
   late String email;

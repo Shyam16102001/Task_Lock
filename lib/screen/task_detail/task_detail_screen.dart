@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -66,13 +68,13 @@ class TaskDetailScreen extends StatelessWidget {
               buildInfo(context, "Ending at:", "$endDate, $endTime"),
               buildInfo(context, "Remaining:", Jiffy(temp).fromNow()),
               buildInfo(context, "Rewards:", "$rewards"),
-              buildInfo(context, "Assigned by", assigned),
-              if (description != null)
+              buildInfo(context, "Assigned by:", assigned),
+              if (description != "")
                 (Text(
                   "Description:",
                   style: Theme.of(context).textTheme.headlineSmall,
                 )),
-              if (description != null)
+              if (description != "")
                 Padding(
                   padding: EdgeInsets.symmetric(
                       horizontal: getProportionateScreenWidth(20)),
@@ -199,7 +201,8 @@ class TaskDetailScreen extends StatelessWidget {
   }
 
   String shortner(String text) {
-    if (text.length > 20) {
+    print(text.length);
+    if (text.length > 22) {
       text = text.substring(0, 15);
       return ("$text.....");
     } else {
@@ -216,7 +219,7 @@ class TaskDetailScreen extends StatelessWidget {
                 title,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(width: SizeConfig.screenWidth * 0.05),
+              SizedBox(width: SizeConfig.screenWidth * 0.04),
               Text(
                 shortner(value),
                 style: Theme.of(context)

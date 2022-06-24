@@ -11,7 +11,7 @@ class SignInScreen extends StatelessWidget {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(toolbarHeight: 10),
-      body: Body(),
+      body: const Body(),
     );
   }
 }

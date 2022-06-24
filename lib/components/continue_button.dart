@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
 
+// ignore: must_be_immutable
 class ContinueButton extends StatelessWidget {
   final String text;
   final VoidCallback press;

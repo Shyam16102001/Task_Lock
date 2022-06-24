@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_lock/config/constants.dart';
 import 'package:task_lock/config/size_config.dart';
 import 'package:task_lock/data_service/get_event_list.dart';
@@ -15,10 +15,19 @@ class RewardsScreen extends StatefulWidget {
 
 class _RewardsScreenState extends State<RewardsScreen> {
   int coins = 0;
+  bool visible = true;
   @override
   void initState() {
     fetchcoins();
+    timer();
     super.initState();
+  }
+
+  timer() async {
+    await Future.delayed(const Duration(seconds: 3));
+    setState(() {
+      visible = false;
+    });
   }
 
   fetchcoins() {
@@ -81,22 +90,64 @@ class _RewardsScreenState extends State<RewardsScreen> {
             ),
           ),
           SizedBox(height: getProportionateScreenHeight(10)),
-          Text(
-            " Redeem Vouchers: ",
-            style: Theme.of(context).textTheme.headlineSmall,
+          visible ? voucher() : noVoucher(context),
+        ],
+      ),
+    );
+  }
+
+  Widget voucher() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          " Redeem Vouchers: ",
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        Container(
+          padding: const EdgeInsets.all(8),
+          height: 500,
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: 227,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10),
+            itemBuilder: (_, index) => loading(),
+            itemCount: 8,
           ),
-          Container(
-            padding: EdgeInsets.all(8),
-            height: 500,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisExtent: 227,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10),
-              itemBuilder: (_, index) => loading(),
-              itemCount: 8,
-            ),
+        ),
+      ],
+    );
+  }
+
+  Padding noVoucher(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.symmetric(horizontal: getProportionateScreenHeight(20)),
+      child: Column(
+        children: [
+          SizedBox(height: getProportionateScreenHeight(30)),
+          SvgPicture.asset(
+            "assets/images/rewards.svg",
+            // height: 400,
+            width: 350,
+          ),
+          Text(
+            "No vouchers",
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          Text(
+            "available right now.",
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          SizedBox(height: getProportionateScreenHeight(10)),
+          Text(
+            "Please check after some time!",
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall!
+                .merge(const TextStyle(color: kPrimaryLightColor)),
           ),
         ],
       ),
@@ -159,8 +210,7 @@ class Skeleton extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.05),
-          // color: Colors.b,
-          borderRadius: const BorderRadius.all(const Radius.circular(16))),
+          borderRadius: const BorderRadius.all(Radius.circular(16))),
     );
   }
 }

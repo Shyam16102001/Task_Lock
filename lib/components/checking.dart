@@ -12,10 +12,10 @@ class Checking extends StatefulWidget {
   static String routeName = "/checking";
 
   @override
-  _CheckingState createState() => _CheckingState();
+  CheckingState createState() => CheckingState();
 }
 
-class _CheckingState extends State<Checking> {
+class CheckingState extends State<Checking> {
   late Timer timer;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? user;

@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:457654610702:android:4600957fcc96b5abf3055f",
+        "mobilesdk_app_id": "1:457654610702:android:edeed69ce90f46eff3055f",
         "android_client_info": {
-          "package_name": "com.shyam16102001.task_lock"
+          "package_name": "me.shyam16102001.task_lock"
         }
       },
       "oauth_client": [

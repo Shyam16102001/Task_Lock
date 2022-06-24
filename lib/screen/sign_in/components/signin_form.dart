@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_returning_null_for_void
+
 import 'package:flutter/material.dart';
 import 'package:task_lock/components/continue_button.dart';
 import 'package:task_lock/components/form_error.dart';
@@ -10,10 +12,10 @@ class SignInForm extends StatefulWidget {
   const SignInForm({Key? key}) : super(key: key);
 
   @override
-  _SignInFormState createState() => _SignInFormState();
+  SignInFormState createState() => SignInFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class SignInFormState extends State<SignInForm> {
   final _formKey = GlobalKey<FormState>();
   late String email;
   late String password;

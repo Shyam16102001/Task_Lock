@@ -7,13 +7,6 @@ const kTextColor = Color(0xFF2E3A59);
 const kBackgroundColor = Color(0xFFE5E5E5);
 const kAnimationDuration = Duration(milliseconds: 200);
 
-// final headingStyle = TextStyle(
-//   color: kPrimaryColor,
-//   // fontSize: getProportionateScreenWidth(38),
-//   fontWeight: FontWeight.bold,
-//   fontFamily: "Lato",
-// );
-
 final RegExp emailValidatorRegExp =
     RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 const String kNameNullError = "Please enter your name";
