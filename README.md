@@ -1,4 +1,4 @@
-# task_lock
+# TaskLock
 
 A task manager which gives rewards for completing the tasks.
 
